@@ -1,18 +1,59 @@
+![demo](docs/assets/demo.gif)
+
 # singing-coach-ai
 
-Feed it a recording of yourself singing, get back actual coaching feedback. Works with audio files (mp3, wav, flac, m4a) and video files (mp4, mov).
+Feed it a recording of yourself singing, get back actual coaching feedback — not just numbers.
 
-Under the hood it uses librosa to pull pitch stability, rhythm, dynamics, and spectral data out of the audio, then sends that analysis to Claude to turn it into readable feedback.
+Works with audio files (mp3, wav, flac, m4a) and video (mp4, mov). Uses librosa to extract pitch stability, rhythm, dynamics, and spectral data, then sends the analysis to Claude to turn it into readable coaching.
+
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white)
+![librosa](https://img.shields.io/badge/librosa-0.10%2B-orange)
+![Claude](https://img.shields.io/badge/Claude-claude--opus--4--7-blueviolet)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+---
 
 ## What it measures
 
-**Pitch** -- fundamental frequency tracking via pyin, stability score, average note, range in semitones, and how much you're drifting (std dev in Hz).
+**Pitch** — fundamental frequency via pyin, stability score, mean note, range in semitones, drift in Hz. The stability score matters most for beginners — below 0.85 means noticeable pitch wobble on sustained notes.
 
-**Rhythm** -- tempo estimate in BPM, beat count, and a regularity score so you can see if you're rushing or dragging.
+**Rhythm** — BPM estimate, beat count, regularity score. Below 0.75 usually means rushing in specific phrases.
 
-**Dynamics** -- average and peak levels in dB, dynamic range, and a consistency score.
+**Dynamics** — average and peak levels in dB, dynamic range, consistency score. Below 0.7 means uneven breath support.
 
-**Tone** -- spectral centroid and MFCC features that give Claude context about your vocal timbre.
+**Tone** — spectral centroid and MFCC features that give Claude context about vocal timbre.
+
+---
+
+## Architecture
+
+```
+recording.mp3 / .mp4
+        │
+        ▼
+  audio extraction (ffmpeg, video only)
+        │
+        ▼
+  librosa analysis
+  ┌─────────────────────────────────────┐
+  │  pyin pitch tracking                │
+  │  beat tracking + tempo              │
+  │  RMS energy / dynamic range         │
+  │  spectral centroid + MFCC           │
+  └─────────────────────────────────────┘
+        │
+        ▼
+  structured JSON report
+        │
+        ├──→  stdout  (--no-ai mode)
+        │
+        └──→  Claude API (claude-opus-4-7)
+                    │
+                    ▼
+              coaching feedback
+```
+
+---
 
 ## Setup
 
@@ -20,39 +61,38 @@ Under the hood it uses librosa to pull pitch stability, rhythm, dynamics, and sp
 pip install -r requirements.txt
 ```
 
-For video files you also need ffmpeg:
+Video files also need ffmpeg:
 
 ```bash
-# mac
-brew install ffmpeg
-
-# ubuntu/debian
-apt install ffmpeg
+brew install ffmpeg        # macOS
+apt install ffmpeg         # Ubuntu/Debian
 ```
-
-Set your Anthropic API key:
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
+---
+
 ## Usage
 
 ```bash
-# analyze and get coaching feedback
+# Full analysis with coaching feedback
 python singing_coach.py my_recording.mp3
 
-# video works too
+# Video works too
 python singing_coach.py practice_session.mp4
 
-# skip the AI, just print the raw numbers
+# Raw numbers only — no API call
 python singing_coach.py my_recording.mp3 --no-ai
 
-# pass the key directly if you don't want to use the env var
+# Inline API key
 python singing_coach.py my_recording.mp3 --api-key sk-ant-...
 ```
 
-## Example output (--no-ai)
+---
+
+## Example output
 
 ```json
 {
@@ -81,8 +121,22 @@ python singing_coach.py my_recording.mp3 --api-key sk-ant-...
 }
 ```
 
+Coaching feedback from Claude (same recording):
+
+> Your pitch stability is strong — 0.935 on held notes is above average. The 14.3 Hz drift on sustained A3 suggests you're going sharp under breath pressure. Try dropping support slightly on the second beat of each phrase.
+>
+> The 0.643 dynamics consistency is your biggest gap. Your peaks are clean (-6.1 dB) but the average is quiet at -18.4 dB — the range between soft and loud passages is wider than the recording handles cleanly.
+
+---
+
 ## Requirements
 
 - Python 3.9+
 - ffmpeg (video files only)
-- Anthropic API key (skip with `--no-ai` if you just want raw numbers)
+- Anthropic API key (skip with `--no-ai` for raw numbers)
+
+---
+
+## License
+
+MIT
