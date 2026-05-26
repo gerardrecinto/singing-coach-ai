@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="260" viewBox="0 0 960 260" role="img" aria-labelledby="title desc">
+  <title id="title">Singing Coach AI logo</title>
+  <desc id="desc">AI vocal coaching from audio analysis.</desc>
+  <rect width="960" height="260" rx="28" fill="#0b1020"/>
+  <g fill="none" stroke="#f472b6" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M98 148c40-96 78-96 118 0s78 96 118 0"/>
+    <path d="M88 184h260"/>
+    <path d="M398 76v108"/>
+    <path d="M398 76c58 8 74 44 32 70"/>
+  </g>
+  <text x="470" y="118" fill="#f8fafc" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="800">Singing Coach AI</text>
+  <text x="473" y="160" fill="#94a3b8" font-family="Inter, Arial, sans-serif" font-size="22">Upload a take. Get focused vocal feedback.</text>
+</svg>

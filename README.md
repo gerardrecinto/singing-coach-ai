@@ -1,6 +1,6 @@
-![demo](docs/assets/demo.gif)
-
 # singing-coach-ai
+
+![Singing Coach AI logo](docs/assets/logo.svg)
 
 Feed it a recording of yourself singing, get back actual coaching feedback — not just numbers.
 
@@ -10,6 +10,8 @@ Works with audio files (mp3, wav, flac, m4a) and video (mp4, mov). Uses librosa 
 ![librosa](https://img.shields.io/badge/librosa-0.10%2B-orange)
 ![Claude](https://img.shields.io/badge/Claude-claude--opus--4--7-blueviolet)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+![demo](docs/assets/demo.gif)
 
 ---
 
@@ -134,6 +136,12 @@ Coaching feedback from Claude (same recording):
 - Python 3.9+
 - ffmpeg (video files only)
 - Anthropic API key (skip with `--no-ai` for raw numbers)
+
+## Product Direction
+
+This can grow into a freemium vocal coaching product: local analysis as the open-source wedge, hosted session history for singers, and a coach dashboard for teachers.
+
+See [docs/go-to-market.md](docs/go-to-market.md).
 
 ---
 
