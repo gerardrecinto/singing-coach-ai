@@ -2,7 +2,7 @@
 
 ![Singing Coach AI logo](docs/assets/logo.svg)
 
-Feed it a recording of yourself singing, get back actual coaching feedback — not just numbers.
+Feed it a recording of yourself singing, get back actual coaching feedback: not just numbers.
 
 Works with audio files (mp3, wav, flac, m4a) and video (mp4, mov). Uses librosa to extract pitch stability, rhythm, dynamics, and spectral data, then sends the analysis to Claude to turn it into readable coaching.
 
@@ -17,13 +17,13 @@ Works with audio files (mp3, wav, flac, m4a) and video (mp4, mov). Uses librosa 
 
 ## What it measures
 
-**Pitch** — fundamental frequency via pyin, stability score, mean note, range in semitones, drift in Hz. The stability score matters most for beginners — below 0.85 means noticeable pitch wobble on sustained notes.
+**Pitch**: fundamental frequency via pyin, stability score, mean note, range in semitones, drift in Hz. The stability score matters most for beginners: below 0.85 means noticeable pitch wobble on sustained notes.
 
-**Rhythm** — BPM estimate, beat count, regularity score. Below 0.75 usually means rushing in specific phrases.
+**Rhythm**: BPM estimate, beat count, regularity score. Below 0.75 usually means rushing in specific phrases.
 
-**Dynamics** — average and peak levels in dB, dynamic range, consistency score. Below 0.7 means uneven breath support.
+**Dynamics**: average and peak levels in dB, dynamic range, consistency score. Below 0.7 means uneven breath support.
 
-**Tone** — spectral centroid and MFCC features that give Claude context about vocal timbre.
+**Tone**: spectral centroid and MFCC features that give Claude context about vocal timbre.
 
 ---
 
@@ -85,7 +85,7 @@ python singing_coach.py my_recording.mp3
 # Video works too
 python singing_coach.py practice_session.mp4
 
-# Raw numbers only — no API call
+# Raw numbers only: no API call
 python singing_coach.py my_recording.mp3 --no-ai
 
 # Inline API key
@@ -125,9 +125,9 @@ python singing_coach.py my_recording.mp3 --api-key sk-ant-...
 
 Coaching feedback from Claude (same recording):
 
-> Your pitch stability is strong — 0.935 on held notes is above average. The 14.3 Hz drift on sustained A3 suggests you're going sharp under breath pressure. Try dropping support slightly on the second beat of each phrase.
+> Your pitch stability is strong: 0.935 on held notes is above average. The 14.3 Hz drift on sustained A3 suggests you're going sharp under breath pressure. Try dropping support slightly on the second beat of each phrase.
 >
-> The 0.643 dynamics consistency is your biggest gap. Your peaks are clean (-6.1 dB) but the average is quiet at -18.4 dB — the range between soft and loud passages is wider than the recording handles cleanly.
+> The 0.643 dynamics consistency is your biggest gap. Your peaks are clean (-6.1 dB) but the average is quiet at -18.4 dB: the range between soft and loud passages is wider than the recording handles cleanly.
 
 ---
 
