@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.env
+.DS_Store
+*.wav
+*.mp3
+*.mp4
+*.mov
+*.flac
+*.m4a
