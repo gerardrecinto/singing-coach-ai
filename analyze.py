@@ -14,16 +14,21 @@ AUDIO_EXTENSIONS = {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".aac", ".wma"}
 def extract_audio_from_video(video_path: str) -> str:
     tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
     tmp.close()
-    subprocess.run(
-        [
-            "ffmpeg", "-i", video_path,
-            "-vn", "-acodec", "pcm_s16le",
-            "-ar", "22050", "-ac", "1",
-            tmp.name, "-y",
-        ],
-        check=True,
-        capture_output=True,
-    )
+    try:
+        subprocess.run(
+            [
+                "ffmpeg", "-i", video_path,
+                "-vn", "-acodec", "pcm_s16le",
+                "-ar", "22050", "-ac", "1",
+                tmp.name, "-y",
+            ],
+            check=True,
+            capture_output=True,
+        )
+    except subprocess.CalledProcessError as e:
+        os.unlink(tmp.name)
+        stderr = e.stderr.decode(errors="replace").strip() if e.stderr else ""
+        raise ValueError(f"ffmpeg failed to extract audio from {video_path}: {stderr or 'unknown error'}")
     return tmp.name
 
 
@@ -66,6 +71,9 @@ def analyze_pitch(y: np.ndarray, sr: int) -> dict:
 
 def analyze_rhythm(y: np.ndarray, sr: int) -> dict:
     tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
+    # librosa >=1.0 returns tempo as a 1-element ndarray instead of a scalar;
+    # numpy >=2.0 refuses float() on anything but a 0-d array, so pull the value out.
+    tempo = float(np.asarray(tempo).reshape(-1)[0])
 
     if len(beats) < 2:
         return {
